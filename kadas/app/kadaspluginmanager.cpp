@@ -1,6 +1,7 @@
 #include "kadaspluginmanager.h"
 #include "kadasapplication.h"
 #include "kadaspythonintegration.h"
+#include <kadas/gui/kadasribbonbutton.h>
 #include <qgis/qgsnetworkaccessmanager.h>
 #include <qgis/qgsnetworkcontentfetcher.h>
 #include <QDomDocument>
@@ -10,9 +11,10 @@
 #include <QTreeWidgetItem>
 #include <quazip5/quazipfile.h>
 
-KadasPluginManager::KadasPluginManager( QgsMapCanvas *canvas ): KadasBottomBar( canvas )
+KadasPluginManager::KadasPluginManager( QgsMapCanvas *canvas, KadasRibbonButton* mainWindowButton ): KadasBottomBar( canvas ), mMainWindowButton( mainWindowButton )
 {
   setupUi( this );
+  mCloseButton->setIcon( QIcon( ":/kadas/icons/close" ) );
 
   KadasPythonIntegration *p = KadasApplication::instance()->pythonIntegration();
   if ( !p )
@@ -132,6 +134,11 @@ void KadasPluginManager::on_mInstalledTreeWidget_itemClicked( QTreeWidgetItem *i
       setItemDeactivatable( item );
     }
   }
+}
+
+void KadasPluginManager::on_mCloseButton_clicked()
+{
+    mMainWindowButton->setChecked( false );
 }
 
 void KadasPluginManager::installButtonClicked()
